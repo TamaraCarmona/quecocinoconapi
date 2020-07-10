@@ -1,8 +1,10 @@
 const Search = require("../models/search.model.js");
 
 exports.findOne = (req, res) => {
-    var bodysearch = req.body.search; 
+    var bodysearch = req.body; 
     console.log(req);
+    console.log(bodysearch);
+
     if (!req.body) {
       res.status(500).send({
         message: "Content can not be empty!"
@@ -11,10 +13,9 @@ exports.findOne = (req, res) => {
   
     // Create a Customer
     const search = new Search({    
-        userName : bodysearch.userName,
-        categoria : bodysearch.categoria,           
-        //Ingredientes
-        ingredientes: req.body.ingredientes, 
+        categoria : bodysearch.categoria,
+        userName : bodysearch.userName,           
+        ingredientes: bodysearch.ingredientes, 
     });
     
     Search.findById(search, (err, data) => {

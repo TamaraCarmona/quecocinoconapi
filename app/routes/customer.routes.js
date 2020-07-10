@@ -17,7 +17,7 @@ module.exports = app => {
     app.get("/categoria", receta.findAll);
 
     //Search
-    app.post("/search/search",search.findOne)
+    app.post("/search/principal",search.findOne)
    
   };    
 

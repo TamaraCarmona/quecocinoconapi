@@ -3,9 +3,7 @@ const Receta = require("../models/receta.model.js");
 //alta receta falta
 exports.create = (req, res) => {   
   var bodyreceta = req.body.receta;  
-  console.log(bodyreceta)
-
-  // Validate request
+   // Validate request
     if (!req.body) {
       res.status(400).send({
         message: "Content can not be empty!"
@@ -37,8 +35,7 @@ exports.create = (req, res) => {
   };
 
   //categoria
-  exports.findAll = (req, res) => {
-    console.log(req)
+  exports.findAll = (req, res) => {   
     Receta.getAll((err, data) => {
       if (err)
         res.status(500).send({
