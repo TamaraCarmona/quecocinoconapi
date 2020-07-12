@@ -6,18 +6,18 @@ const sqlFunction = require("./sql.js");
 
 
 const Receta = function (receta) {
-  this.idReceta = receta.idReceta;  
   this.tipoReceta = receta.tipoReceta; //Postre,bebida
   this.titulo = receta.titulo; 
   this.userName = receta.userName;
   this.categoria =receta.categoria;  //id categoria
-  this.urlFoto = receta.foto;
-  this.descripcion = receta.descripcion;
+  this.urlFoto = receta.foto;  
+  this.pasos       = receta.pasos;
+  this.ingredientes = receta.ingredientes;
 }
 
 
 //Crear receta
-Receta.create = (newReceta, result) => {      
+Receta.create = (newReceta, result) => {        
   sqlFunction.NewRecipe(newReceta), (err, res) => {
       if (err) {      
         result("",null);

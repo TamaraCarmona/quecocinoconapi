@@ -3,7 +3,7 @@ const Customer = require("../models/login.model.js");
 
 // Find a single Customer with a customerId
 exports.findOne = (req, res) => {
-  console.log(req);
+ 
   if (!req.body) {
     res.status(500).send({
       message: "Content can not be empty!"
@@ -30,7 +30,7 @@ exports.findOne = (req, res) => {
 //register
 exports.create = (req, res) => {
   // Validate request
-  console.log(req.body);
+ 
   if (!req.body) {
     res.status(400).send({
       message: "Content can not be empty!"
