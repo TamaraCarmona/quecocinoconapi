@@ -45,4 +45,33 @@ exports.create = (req, res) => {
       else res.send(data);
     });
   };
+
+// Find a single Customer with a customerId
+exports.findOne = (req, res) => {
+ console.log(req.params)
+  if (!req.body) {
+    res.status(500).send({
+      message: "Content can not be empty!"
+    });
+  }
+
+  // Create a Customer
+  const receta = new Receta({
+    pass : req.body.idReceta,    
+  });
+
+  // busca el usuario
+  Receta.findById(req.params, (err, data) => {
+    if (err)
+      res.status(401).send({
+        message:
+          "No se pudo cargar la receta"
+      });
+    else res.send(data);
+  });
+};
+
+
+
+
  

@@ -6,19 +6,3 @@ function Ingrediente(idReceta,cantidad,nombre,umedida) {
     this.umedida = umedida; 
   }
   module.exports = Ingrediente;
-
-
-  ingredientes =[{
-    idReceta:2,
-    cantidad:1
-  },
-{
-  idReceta:3,
-  cantidad:3,
-}];
-
-ingredientes.map(ingrediente=>{
-  
-  
-})
-

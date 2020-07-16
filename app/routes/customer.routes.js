@@ -13,11 +13,14 @@ module.exports = app => {
     
     //RECETAS
     app.post("/receta/create", receta.create);   
+    app.get("/receta/receta/:idReceta", receta.findOne);
     //Categoria
     app.get("/categoria", receta.findAll);
+    
 
     //Search
     app.post("/search/principal",search.findOne)
+    app.get("/search/myreceta/:userName",search.findUserName)
    
   };    
 
