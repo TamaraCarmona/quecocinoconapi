@@ -10,10 +10,17 @@ const Search = function (search) {
 Search.findById = (Search, result) => { 
   console.log(Search.fullMatch)
   let conector;
-  let basesql = `SELECT R.idReceta,R.Usuario_idUsuario,I.Ingrediente_nombre,R.titulo,C.nombre
-                  from receta R inner join Ingredientes I on I.Receta_idReceta = R.idReceta 
-                  inner join categoria C on C.idCategoria = R.Categoria_idCategoria
-                  where I.ingrediente_nombre like `; 
+  let basesql = `SELECT distinct R.idReceta,R.Usuario_idUsuario,R.titulo,C.nombre, count(L.Receta_idReceta) as totalmegusta,
+  IF((select L.Usuario_idUsuario
+      from likes L
+      where L.Usuario_idUsuario =  '${Search.userName}' and L.Receta_idReceta = R.idReceta) is not null ,true,false) as megusta
+  from receta R 
+  inner join categoria C on C.idCategoria = R.Categoria_idCategoria
+  left join likes L on L.Receta_idReceta = R.idReceta
+  where R.idReceta in(select I.Receta_idReceta 
+            from ingredientes I 
+                      where I.ingrediente_nombre like  `; 
+
   if(Search.fullMatch == true){
     conector = 'and';
   }else{
@@ -27,7 +34,9 @@ Search.findById = (Search, result) => {
       basesql+= `'%${Search.ingredientes[i].ingrediente}%' ${conector}`; 
     }  
   }
- 
+  
+  basesql += `)  group by  R.idReceta,R.Usuario_idUsuario,R.titulo,C.nombre`;
+
   sql.query(basesql, (err, res) => {
     if (err) { 
         console.log("error: ", err);
@@ -46,8 +55,8 @@ Search.findById = (Search, result) => {
  };
 
 
- Search.findByuserName = (Search, result) => {   // devuelve una lista de recetas por usuario
-  let basesql = `SELECT R.idReceta,R.Usuario_idUsuario,I.Ingrediente_nombre,R.titulo,C.nombre
+ Search.findByuserName = (Search, result) => {  
+  let basesql = `SELECT R.idReceta,R.titulo,C.nombre,urlFoto
                   from receta R inner join Ingredientes I on I.Receta_idReceta = R.idReceta 
                   inner join categoria C on C.idCategoria = R.Categoria_idCategoria
                   where r.Usuario_idUsuario = '${Search.userName}'`; 

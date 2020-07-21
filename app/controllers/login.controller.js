@@ -1,4 +1,3 @@
-
 const Customer = require("../models/login.model.js");
 
 // Find a single Customer with a customerId
@@ -21,9 +20,9 @@ exports.findOne = (req, res) => {
     if (err)
       res.status(401).send({
         message:
-          "Usuario incorrecto, culiau."
+          "Usuario incorrecto."
       });
-    else res.send(data);
+    else res.send(data);// aca genero el token edvolver al angular con respuesta
   });
 };
 

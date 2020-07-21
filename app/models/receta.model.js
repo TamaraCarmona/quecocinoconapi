@@ -18,13 +18,13 @@ const Receta = function (receta) {
 
 //Crear receta
 Receta.create = (newReceta, result) => {
-  sqlFunction.NewRecipe(newReceta), (err, res) => {
+  sqlFunction.NewRecipe(newReceta, (err, res) => {
     if (err) {
       result("", null);
       return;
     }
     result(null, true);
-  };
+  });
 
 };
 
@@ -111,6 +111,29 @@ Receta.findById = (newreceta, result) => {
     });
 
 };
+
+Receta.updateById = (idReceta, userName, result) => { 
+   sql.query(
+     `UPDATE usuario SET email = '${newCustomer.email}', nombre = '${newCustomer.name}',direccion = '${newCustomer.direccion}', password = '${newCustomer.pass}',dni=${newCustomer.dni}, apellido='${newCustomer.apellido}' WHERE idUsuario = '${newCustomer.userName}'`,      
+     (err, res) => {     
+       if (err) {      
+         result(null, "Error al eliminar");
+         return;
+       }
+ 
+       if (res.affectedRows == 0) {
+         // not found Customer with the id
+         result({ kind: "not_found" }, null);
+         return;
+       }
+     
+       result(null,true);
+     }
+   );
+ };
+
+
+
 
 module.exports = Receta;
 

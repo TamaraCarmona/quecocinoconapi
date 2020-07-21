@@ -3,7 +3,8 @@ module.exports = app => {
     const users = require("../controllers/login.controller.js");
     const receta = require("../controllers/receta.controller.js");
     const search = require("../controllers/search.controller.js");
-      
+    const ranking = require("../controllers/ranking.controller.js");
+      //todas con ,midlelware esta es la que checkea el token 
     //USERS
     app.post("/user/login", users.findOne);   
     app.post("/user/register", users.create);    
@@ -14,13 +15,20 @@ module.exports = app => {
     //RECETAS
     app.post("/receta/create", receta.create);   
     app.get("/receta/receta/:idReceta", receta.findOne);
+    app.put("/receta/delete/:idReceta",receta.update);//este elimina la receta
     //Categoria
     app.get("/categoria", receta.findAll);
-    
+   
 
     //Search
     app.post("/search/principal",search.findOne)
     app.get("/search/myreceta/:userName",search.findUserName)
+
+    //Ranking
+    app.post("/ranking/like", ranking.create);
+    app.get("/ranking/top", ranking.findAll);    
+    app.put("/ranking/like/delete/:idReceta",ranking.update);
+    
    
   };    
 

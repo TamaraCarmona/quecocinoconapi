@@ -21,23 +21,20 @@ module.exports.NewRecipe = function (receta) {
                            console.log("err",err) // handle error
                         } else {
                             idPaso = result.insertId;
-                              //Foto             
-                            /*      receta.fotos.map(foto => {
-                                    sql.query(`INSERT INTO foto (urlFoto,orden,idPaso) 
-                                    values('${foto.urlFoto}',${foto.orden},${idPaso})`)  
-                                })*/
+                                      
+                           receta.fotos.map(foto => {
+                            sql.query(`INSERT INTO foto (urlFoto,orden,idPaso) 
+                                values('${foto.urlFoto}',${foto.orden},${idPaso})`)  
+                            })
                             
                         }
                     });
                 })              
                 //Ingrediente            
-                receta.ingredientes.map(ingrediente => {
-                   let cantmedida = ingrediente.cantidad.split(' '); 
-                   let cantidad   = cantmedida[0];
-                   let medida    = cantmedida[1];
-                   console.log(cantmedida,cantidad,medida);
+                
+                receta.ingredientes.map(ingrediente => {                                                 
                     sql.query(`INSERT INTO ingredientes (Ingrediente_nombre,Receta_idReceta,cantidad,umedida) 
-                    values('${ingrediente.ingrediente}',${idReceta},${cantidad},'${medida}')`)
+                    values('${ingredienteM}',${idReceta},${ingrediente.cantidad},'${ingrediente.umedida}')`)
                 })
             }
         }
