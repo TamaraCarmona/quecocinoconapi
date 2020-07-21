@@ -13,11 +13,13 @@ const Receta = function (receta) {
   this.urlFoto = receta.foto;
   this.pasos = receta.pasos;
   this.ingredientes = receta.ingredientes;
+  this.fotos = receta.fotos;
 }
 
 
 //Crear receta
 Receta.create = (newReceta, result) => {
+  console.log("entra a la funcion")
   sqlFunction.NewRecipe(newReceta, (err, res) => {
     if (err) {
       result("", null);
@@ -113,24 +115,67 @@ Receta.findById = (newreceta, result) => {
 };
 
 Receta.updateById = (idReceta, userName, result) => { 
-   sql.query(
-     `UPDATE usuario SET email = '${newCustomer.email}', nombre = '${newCustomer.name}',direccion = '${newCustomer.direccion}', password = '${newCustomer.pass}',dni=${newCustomer.dni}, apellido='${newCustomer.apellido}' WHERE idUsuario = '${newCustomer.userName}'`,      
-     (err, res) => {     
-       if (err) {      
-         result(null, "Error al eliminar");
-         return;
-       }
- 
-       if (res.affectedRows == 0) {
-         // not found Customer with the id
-         result({ kind: "not_found" }, null);
-         return;
-       }
-     
-       result(null,true);
-     }
-   );
+  console.log(idReceta,userName)
+  var sqlquery = [`delete from favorito
+                   where Receta_idReceta = ${idReceta} and Usuario_idUsuario = ' ${userName}'`,
+                   `delete from likes
+                   where Receta_idReceta = ${idReceta} and Usuario_idUsuario = ' ${userName}'`,
+                   `delete from ingredientes
+                   where Receta_idReceta = ${idReceta} and Usuario_idUsuario = ' ${userName}'`,
+                   `delete from paso
+                   where id_Receta = ${idReceta}`,
+                   `delete from receta
+                   where idReceta = ${idReceta} and Usuario_idUsuario = ' ${userName}'`];
+    
+        sql.query(sqlquery[0], (err, res) => {
+        if (err) {
+          console.log("error: ", err);
+          result("err, null", null);
+          return;
+        }
+        if (res.length) {                       
+              sql.query(sqlquery[1], (err, res) => {
+                if (err) {
+                  console.log("error: ", err);
+                  result(null, " ");
+                  return;
+                }
+                if (res.length) {                            
+                    sql.query(sqlquery[2], (err, res) => {                      
+                      if (err) {
+                        console.log("error: ", err);
+                        result(null, " ");
+                        return;
+                      }
+                      if (res.length) {                            
+                        sql.query(sqlquery[3], (err, res) => {                      
+                          if (err) {
+                            console.log("error: ", err);
+                            result(null, " ");
+                            return;
+                          }
+                          if (res.length) {
+                            sql.query(sqlquery[4], (err, res) => {                      
+                              if (err) {
+                                console.log("error: ", err);
+                                result(null, " ");
+                                return;
+                              }                              
+                              if (res.length) {   
+                                console.log("entro")                           
+                                result(null, true);          
+                              }          
+                            });      
+                          }          
+                        });
+                      }           
+                    });
+                }          
+              });
+        }                 
+      });
  };
+
 
 
 

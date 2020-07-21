@@ -10,7 +10,7 @@ const Search = function (search) {
 Search.findById = (Search, result) => { 
   console.log(Search.fullMatch)
   let conector;
-  let basesql = `SELECT distinct R.idReceta,R.Usuario_idUsuario,R.titulo,C.nombre, count(L.Receta_idReceta) as totalmegusta,
+  let basesql = `SELECT distinct R.idReceta,R.urlFoto,R.Usuario_idUsuario,R.titulo,C.nombre, count(L.Receta_idReceta) as totalmegusta,
   IF((select L.Usuario_idUsuario
       from likes L
       where L.Usuario_idUsuario =  '${Search.userName}' and L.Receta_idReceta = R.idReceta) is not null ,true,false) as megusta
@@ -56,7 +56,7 @@ Search.findById = (Search, result) => {
 
 
  Search.findByuserName = (Search, result) => {  
-  let basesql = `SELECT R.idReceta,R.titulo,C.nombre,urlFoto
+  let basesql = `SELECT R.idReceta,R.titulo,C.nombre,R.urlFoto
                   from receta R inner join Ingredientes I on I.Receta_idReceta = R.idReceta 
                   inner join categoria C on C.idCategoria = R.Categoria_idCategoria
                   where r.Usuario_idUsuario = '${Search.userName}'`; 

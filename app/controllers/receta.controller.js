@@ -78,8 +78,8 @@ exports.update = (req, res) => {
       message: "Content can not be empty!"
     });
   }
-
-  Customer.updateById(req.params.idReceta,req.body.userName,(err, data) => {
+  
+  Receta.updateById(req.params.idReceta,req.body.userName,(err, data) => {
       if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({

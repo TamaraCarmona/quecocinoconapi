@@ -25,15 +25,23 @@ exports.create = (req, res) => {
 };
 
 exports.findAll = (req, res) => {   
-    Receta.getAll((err, data) => {
-      if (err)
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while retrieving customers."
-        });
-      else res.send(data);
+  console.log(req.params)
+  if (!req.body) {
+    res.status(500).send({
+      message: "Content can not be empty!"
     });
-  };
+  }
+
+ 
+  Ranking.getAll(req.params, (err, data) => {
+    if (err)
+      res.status(401).send({
+        message:
+          "No se pudo encontrar las recetas"
+      });
+    else res.send(data);
+  });
+};
 
 
   exports.update = (req, res) => {

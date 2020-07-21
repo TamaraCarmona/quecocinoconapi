@@ -1,13 +1,13 @@
 const sql = require("./db.js");
 
-const Ranking = function (ranking) { 
+const Favorite = function (favorite) { 
     this.userName =  ranking.userName;
     this.idReceta =  ranking.idReceta;
   }
 
-  Ranking.create = (ranking, result) => {
+  Favorite.create = (favorite, result) => {
     console.log(ranking)
-    sql.query(`insert into likes(Usuario_idUsuario,Receta_idReceta) values('${ranking.userName}',${ranking.idReceta})`,
+    sql.query(`insert into favorito(Usuario_idUsuario,Receta_idReceta) values('${favorite.userName}',${favorite.idReceta})`,
      (err, res) => {
       if (err) {
         console.log(err)
@@ -19,10 +19,11 @@ const Ranking = function (ranking) {
     });  
   };
 
-  Ranking.updateById = (idReceta, userName, result) => {    
+
+  Favorite.updateById = (idReceta, userName, result) => {    
     console.log(idReceta,userName) 
     sql.query(
-       `delete from likes where Receta_idReceta = ${idReceta} and Usuario_idUsuario = '${userName}'`,      
+       `delete from favorito where Receta_idReceta = ${idReceta} and Usuario_idUsuario = '${userName}'`,      
        (err, res) => {     
          if (err) {      
            result(null, "Error al eliminar");
@@ -38,15 +39,16 @@ const Ranking = function (ranking) {
        }
      );
    };
- 
-Ranking.getAll =(userName, result) => {
+
+
+   Favorite.getAll =(userName, result) => {
     sql.query(`SELECT  R.idReceta,R.Usuario_idUsuario,R.titulo,C.nombre, count(L.Receta_idReceta) as totalmegusta,
     IF((select L.Usuario_idUsuario
-        from likes L
+        from favorito L
         where L.Usuario_idUsuario = '${userName} ' and L.Receta_idReceta = R.idReceta) is not null ,'true','false') as megusta
     from receta R 
     inner join categoria C on C.idCategoria = R.Categoria_idCategoria
-    left join likes L on L.Receta_idReceta = R.idReceta
+    left join favorito L on L.Receta_idReceta = R.idReceta
     group by  R.idReceta,R.Usuario_idUsuario,R.titulo,C.nombre 
     having totalmegusta <> 0
     order by totalmegusta desc limit 10                
@@ -62,4 +64,4 @@ Ranking.getAll =(userName, result) => {
     });
   };
 
-module.exports = Ranking;
+  module.exports = Favorite;
