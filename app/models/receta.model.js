@@ -10,7 +10,7 @@ const Receta = function (receta) {
   this.titulo = receta.titulo;
   this.userName = receta.userName;
   this.categoria = receta.categoria;  //id categoria
-  this.urlFoto = receta.foto;
+  this.urlFoto = receta.urlFoto;
   this.pasos = receta.pasos;
   this.ingredientes = receta.ingredientes;
   this.fotos = receta.fotos;
@@ -121,7 +121,7 @@ Receta.updateById = (idReceta, userName, result) => {
                    `delete from likes
                    where Receta_idReceta = ${idReceta} and Usuario_idUsuario = ' ${userName}'`,
                    `delete from ingredientes
-                   where Receta_idReceta = ${idReceta} and Usuario_idUsuario = ' ${userName}'`,
+                   where Receta_idReceta = ${idReceta} `,
                    `delete from paso
                    where id_Receta = ${idReceta}`,
                    `delete from receta
@@ -133,35 +133,36 @@ Receta.updateById = (idReceta, userName, result) => {
           result("err, null", null);
           return;
         }
-        if (res.length) {                       
+        console.log(res)
+        if (res) {                       
               sql.query(sqlquery[1], (err, res) => {
                 if (err) {
                   console.log("error: ", err);
                   result(null, " ");
                   return;
                 }
-                if (res.length) {                            
+                if (res) {                            
                     sql.query(sqlquery[2], (err, res) => {                      
                       if (err) {
                         console.log("error: ", err);
                         result(null, " ");
                         return;
                       }
-                      if (res.length) {                            
+                      if (res) {                            
                         sql.query(sqlquery[3], (err, res) => {                      
                           if (err) {
                             console.log("error: ", err);
                             result(null, " ");
                             return;
                           }
-                          if (res.length) {
+                          if (res) {
                             sql.query(sqlquery[4], (err, res) => {                      
                               if (err) {
                                 console.log("error: ", err);
                                 result(null, " ");
                                 return;
                               }                              
-                              if (res.length) {   
+                              if (res) {   
                                 console.log("entro")                           
                                 result(null, true);          
                               }          

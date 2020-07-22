@@ -44,8 +44,7 @@ Search.findById = (Search, result) => {
         return;
       }
 
-      if (res.length) {
-        console.log("found: ", res);
+      if (res.length) {       
         result(null, res);
         return;
       }  
@@ -56,7 +55,7 @@ Search.findById = (Search, result) => {
 
 
  Search.findByuserName = (Search, result) => {  
-  let basesql = `SELECT R.idReceta,R.titulo,C.nombre,R.urlFoto
+  let basesql = `SELECT distinct R.idReceta,R.titulo,C.nombre,R.urlFoto
                   from receta R inner join Ingredientes I on I.Receta_idReceta = R.idReceta 
                   inner join categoria C on C.idCategoria = R.Categoria_idCategoria
                   where r.Usuario_idUsuario = '${Search.userName}'`; 
@@ -68,8 +67,7 @@ Search.findById = (Search, result) => {
         return;
       }
 
-      if (res.length) {
-        console.log("found: ", res);
+      if (res.length) {       
         result(null, res);
         return;
       }  

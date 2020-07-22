@@ -1,8 +1,8 @@
 const sql = require("./db.js");
 
 const Favorite = function (favorite) { 
-    this.userName =  ranking.userName;
-    this.idReceta =  ranking.idReceta;
+    this.userName =  favorite.userName;
+    this.idReceta =  favorite.idReceta;
   }
 
   Favorite.create = (favorite, result) => {
@@ -42,19 +42,19 @@ const Favorite = function (favorite) {
 
 
    Favorite.getAll =(userName, result) => {
-    sql.query(`SELECT  R.idReceta,R.Usuario_idUsuario,R.titulo,C.nombre, count(L.Receta_idReceta) as totalmegusta,
+     console.log("entra al favorite")
+    sql.query(`SELECT  R.idReceta,R.Usuario_idUsuario,R.titulo,C.nombre,
     IF((select L.Usuario_idUsuario
         from favorito L
-        where L.Usuario_idUsuario = '${userName} ' and L.Receta_idReceta = R.idReceta) is not null ,'true','false') as megusta
+        where L.Usuario_idUsuario = '${userName} ' and L.Receta_idReceta = R.idReceta) is not null ,'true','false') as favorita
     from receta R 
     inner join categoria C on C.idCategoria = R.Categoria_idCategoria
-    left join favorito L on L.Receta_idReceta = R.idReceta
+    inner join favorito L on L.Receta_idReceta = R.idReceta
     group by  R.idReceta,R.Usuario_idUsuario,R.titulo,C.nombre 
-    having totalmegusta <> 0
-    order by totalmegusta desc limit 10                
+                 
     `, (err, res) => {
       if (err) {
-        console.log("error: ", "error al ranking");
+        console.log("error: ", "error favorito");
         result(null, " ");
         return;
       }
