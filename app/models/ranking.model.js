@@ -1,20 +1,19 @@
 const sql = require("./db.js");
+const { query } = require("./db.js");
 
 const Ranking = function (ranking) { 
     this.userName =  ranking.userName;
     this.idReceta =  ranking.idReceta;
   }
 
-  Ranking.create = (ranking, result) => {
-    console.log(ranking)
+  Ranking.create = (ranking, result) => {    
     sql.query(`insert into likes(Usuario_idUsuario,Receta_idReceta) values('${ranking.userName}',${ranking.idReceta})`,
      (err, res) => {
       if (err) {
         console.log(err)
         result("", null);
         return;
-      }
-      console.log(result)
+      }     
       result(null, true);
     });  
   };
@@ -39,25 +38,27 @@ const Ranking = function (ranking) {
      );
    };
  
-Ranking.getAll =(userName, result) => {
-    sql.query(`SELECT  R.idReceta,R.Usuario_idUsuario,R.titulo,C.nombre, count(L.Receta_idReceta) as totalmegusta,
-    IF((select L.Usuario_idUsuario
-        from likes L
-        where L.Usuario_idUsuario = '${userName} ' and L.Receta_idReceta = R.idReceta) is not null ,'true','false') as megusta
-    from receta R 
-    inner join categoria C on C.idCategoria = R.Categoria_idCategoria
-    left join likes L on L.Receta_idReceta = R.idReceta
-    group by  R.idReceta,R.Usuario_idUsuario,R.titulo,C.nombre 
-    having totalmegusta <> 0
-    order by totalmegusta desc limit 10                
-    `, (err, res) => {
+Ranking.getAll =(userName, result) => {   
+ var query = `SELECT distinct R.idReceta,R.Usuario_idUsuario,R.urlFoto,R.titulo,C.nombre, count(L.Receta_idReceta) as totalmegusta,
+ IF((select F.Usuario_idUsuario
+   from favorito F
+   where F.Usuario_idUsuario = '${userName.userName}' and F.Receta_idReceta = R.idReceta) is not null ,true,false) as favorita,
+IF((select L.Usuario_idUsuario
+     from likes L
+     where L.Usuario_idUsuario =  '${userName.userName}' and L.Receta_idReceta = R.idReceta) is not null ,true,false) as megusta
+ from receta R 
+ inner join categoria C on C.idCategoria = R.Categoria_idCategoria
+ left join likes L on L.Receta_idReceta = R.idReceta
+ group by  R.idReceta,R.Usuario_idUsuario,R.titulo,C.nombre     
+ order by totalmegusta desc limit 10                
+ `;
+ console.log(query)
+  sql.query(query, (err, res) => {     
       if (err) {
         console.log("error: ", "error al ranking");
         result(null, " ");
         return;
-      }
-  
-      console.log("customers: ", res);
+      }        
       result(null, res);
     });
   };

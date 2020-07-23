@@ -13,13 +13,13 @@ const Receta = function (receta) {
   this.urlFoto = receta.urlFoto;
   this.pasos = receta.pasos;
   this.ingredientes = receta.ingredientes;
-  this.fotos = receta.fotos;
 }
 
 
 //Crear receta
 Receta.create = (newReceta, result) => {
   console.log("entra a la funcion")
+  console.log(newReceta)
   sqlFunction.NewRecipe(newReceta, (err, res) => {
     if (err) {
       result("", null);
@@ -69,7 +69,7 @@ Receta.findById = (newreceta, result) => {
   var sqlquery =[`select R.titulo,R.urlfoto as urlReceta, R.Usuario_idUsuario as userName, C.nombre as categoria  
       from receta R inner join categoria C on C.idCategoria = R.Categoria_idCategoria where idReceta = ${newreceta.idReceta}`,
       `SELECT Ingrediente_nombre as nombre, cantidad, umedida FROM ingredientes where Receta_idReceta = ${newreceta.idReceta}`,
-      `select * from paso where id_Receta =${newreceta.idReceta}`
+      `select f.urlFoto,p.descripcion,p.idpaso from paso p left join foto f on f.idPaso= p.idpaso  where p.id_Receta =${newreceta.idReceta}`
     ];
 
   let respuesta  = {  
@@ -101,8 +101,7 @@ Receta.findById = (newreceta, result) => {
                       return;
                     }
                     if (res.length) {
-                      respuesta.listPaso =res;
-                      console.log(respuesta);
+                      respuesta.listPaso =res;                     
                       result(null, respuesta);
 
                     }          
@@ -117,15 +116,15 @@ Receta.findById = (newreceta, result) => {
 Receta.updateById = (idReceta, userName, result) => { 
   console.log(idReceta,userName)
   var sqlquery = [`delete from favorito
-                   where Receta_idReceta = ${idReceta} and Usuario_idUsuario = ' ${userName}'`,
+                   where Receta_idReceta = ${idReceta} and Usuario_idUsuario = '${userName}'`,
                    `delete from likes
-                   where Receta_idReceta = ${idReceta} and Usuario_idUsuario = ' ${userName}'`,
+                   where Receta_idReceta = ${idReceta} and Usuario_idUsuario = '${userName}'`,
                    `delete from ingredientes
                    where Receta_idReceta = ${idReceta} `,
                    `delete from paso
                    where id_Receta = ${idReceta}`,
                    `delete from receta
-                   where idReceta = ${idReceta} and Usuario_idUsuario = ' ${userName}'`];
+                   where idReceta = ${idReceta} and Usuario_idUsuario = '${userName}'`];
     
         sql.query(sqlquery[0], (err, res) => {
         if (err) {
@@ -156,14 +155,14 @@ Receta.updateById = (idReceta, userName, result) => {
                             return;
                           }
                           if (res) {
+                            console.log(sqlquery[4])
                             sql.query(sqlquery[4], (err, res) => {                      
                               if (err) {
                                 console.log("error: ", err);
                                 result(null, " ");
                                 return;
                               }                              
-                              if (res) {   
-                                console.log("entro")                           
+                              if (res) {                                                            
                                 result(null, true);          
                               }          
                             });      

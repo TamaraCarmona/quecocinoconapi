@@ -34,7 +34,7 @@ module.exports = app => {
     
      //favorite
     app.post("/favorite/create",favorite.create);
-  //  app.put("/ranking/like/delete/:idReceta",favorite.update);
+    app.put("/ranking/favorite/delete/:idReceta",favorite.update);
     app.get("/ranking/favorito/:userName", favorite.findAll);  
 
   };    

@@ -5,8 +5,8 @@ const Favorite = function (favorite) {
     this.idReceta =  favorite.idReceta;
   }
 
-  Favorite.create = (favorite, result) => {
-    console.log(ranking)
+  Favorite.create = (favorite, result) => {   
+   console.log(favorite)
     sql.query(`insert into favorito(Usuario_idUsuario,Receta_idReceta) values('${favorite.userName}',${favorite.idReceta})`,
      (err, res) => {
       if (err) {
@@ -14,7 +14,7 @@ const Favorite = function (favorite) {
         result("", null);
         return;
       }
-      console.log(result)
+     
       result(null, true);
     });  
   };
@@ -41,15 +41,19 @@ const Favorite = function (favorite) {
    };
 
 
-   Favorite.getAll =(userName, result) => {
-     console.log("entra al favorite")
-    sql.query(`SELECT  R.idReceta,R.Usuario_idUsuario,R.titulo,C.nombre,
+   Favorite.getAll =(userName, result) => {     
+     console.log(userName)
+    sql.query(`SELECT distinct R.idReceta,R.Usuario_idUsuario,R.urlFoto,R.titulo,C.nombre, count(L.Receta_idReceta) as totalmegusta,
+    IF((select F.Usuario_idUsuario
+        from favorito F
+        where F.Usuario_idUsuario = '${userName.userName}' and F.Receta_idReceta = R.idReceta) is not null ,true,false) as favorita,
     IF((select L.Usuario_idUsuario
-        from favorito L
-        where L.Usuario_idUsuario = '${userName} ' and L.Receta_idReceta = R.idReceta) is not null ,'true','false') as favorita
+        from likes L
+        where L.Usuario_idUsuario =  '${userName.userName}' and L.Receta_idReceta = R.idReceta) is not null ,true,false) as megusta
     from receta R 
     inner join categoria C on C.idCategoria = R.Categoria_idCategoria
-    inner join favorito L on L.Receta_idReceta = R.idReceta
+    inner join favorito F on F.Receta_idReceta = R.idReceta
+    left join likes L on L.Receta_idReceta = R.idReceta
     group by  R.idReceta,R.Usuario_idUsuario,R.titulo,C.nombre 
                  
     `, (err, res) => {
@@ -58,8 +62,7 @@ const Favorite = function (favorite) {
         result(null, " ");
         return;
       }
-  
-      console.log("customers: ", res);
+      
       result(null, res);
     });
   };
