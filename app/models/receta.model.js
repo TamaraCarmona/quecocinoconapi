@@ -69,7 +69,7 @@ Receta.findById = (newreceta, result) => {
   var sqlquery =[`select R.titulo,R.urlfoto as urlReceta, R.Usuario_idUsuario as userName, C.nombre as categoria  
       from receta R inner join categoria C on C.idCategoria = R.Categoria_idCategoria where idReceta = ${newreceta.idReceta}`,
       `SELECT Ingrediente_nombre as nombre, cantidad, umedida FROM ingredientes where Receta_idReceta = ${newreceta.idReceta}`,
-      `select f.urlFoto,p.descripcion,p.idpaso from paso p left join foto f on f.idPaso= p.idpaso  where p.id_Receta =${newreceta.idReceta}`
+      ` select * from paso  where id_Receta = ${newreceta.idReceta}`
     ];
 
   let respuesta  = {  
@@ -101,13 +101,37 @@ Receta.findById = (newreceta, result) => {
                       return;
                     }
                     if (res.length) {
-                      respuesta.listPaso =res;                     
-                      result(null, respuesta);
-
+                      respuesta.listPaso = res;
+                      let ultimo = respuesta.listPaso.length - 1;          
+                      respuesta.listPaso.map((paso , index) => {
+                        let idPaso = paso.idPaso;
+                        var queryFotos = `select * from foto where idPaso = ${idPaso}`
+                        sql.query(queryFotos , (err,res) => {
+                          if(err) {
+                            console.log("error: ", err);
+                            result(null, " ");
+                            return;
+                          } else {
+                            if(res.length) {
+                              paso.fotos = [];
+                              paso.fotos = res;
+                              if(index === ultimo) {
+                                result(null, respuesta);     
+                              }
+                            } else {
+                              console.log("no hay fotos");
+                              result(null, " ");
+                              return;
+                            } 
+                          }    
+                        })
+                        
+                      })                   
                     }          
                   });
               }          
             });
+          
       }                 
     });
 
