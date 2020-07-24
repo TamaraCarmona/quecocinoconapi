@@ -52,7 +52,7 @@ IF((select L.Usuario_idUsuario
  group by  R.idReceta,R.Usuario_idUsuario,R.titulo,C.nombre     
  order by totalmegusta desc limit 10                
  `;
- console.log(query)
+ 
   sql.query(query, (err, res) => {     
       if (err) {
         console.log("error: ", "error al ranking");

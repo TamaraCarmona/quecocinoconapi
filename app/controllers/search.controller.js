@@ -17,6 +17,7 @@ exports.findOne = (req, res) => {
         userName : bodysearch.userName,           
         ingredientes: bodysearch.ingredientes, 
         fullMatch : bodysearch.fullMatch,
+        categoria : bodysearch.categoria,
     });
     
     Search.findById(search, (err, data) => {
@@ -42,7 +43,7 @@ exports.findUserName = (req, res) => {
      if (err)
        res.status(401).send({
          message:
-           "No se pudo encontrar el usuario"
+           "No hay recetas"
        });
      else res.send(data);
    });

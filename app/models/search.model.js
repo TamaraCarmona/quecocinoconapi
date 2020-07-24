@@ -11,6 +11,9 @@ Search.findById = (Search, result) => {
   console.log(Search.fullMatch)
   let conector;
   let basesql = `SELECT distinct R.idReceta,R.urlFoto,R.Usuario_idUsuario,R.titulo,C.nombre, count(L.Receta_idReceta) as totalmegusta,
+  IF((select F.Usuario_idUsuario
+    from favorito F
+    where F.Usuario_idUsuario = '${Search.userName}' and F.Receta_idReceta = R.idReceta) is not null ,true,false) as favorita,
   IF((select L.Usuario_idUsuario
       from likes L
       where L.Usuario_idUsuario =  '${Search.userName}' and L.Receta_idReceta = R.idReceta) is not null ,true,false) as megusta
@@ -35,8 +38,8 @@ Search.findById = (Search, result) => {
     }  
   }
   
-  basesql += `)  group by  R.idReceta,R.Usuario_idUsuario,R.titulo,C.nombre`;
-
+  basesql += `) and C.idCategoria = ${Search.categoria} group by  R.idReceta,R.Usuario_idUsuario,R.titulo,C.nombre`;
+  console.log(basesql);
   sql.query(basesql, (err, res) => {
     if (err) { 
         console.log("error: ", err);
